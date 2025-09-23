@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes - EduControl</title>
+    <link rel="stylesheet" href="reports.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <i class="fas fa-graduation-cap"></i>
+            <span>EduControl</span>
+        </div>
+        <div class="navbar-nav">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-home"></i>
+                Inicio
+            </a>
+            <a href="asistencia.html" class="nav-link">
+                <i class="fas fa-clipboard-check"></i>
+                Asistencia
+            </a>
+            <a href="students.html" class="nav-link">
+                <i class="fas fa-users"></i>
+                Estudiantes
+            </a>
+            <a href="reports.html" class="nav-link active">
+                <i class="fas fa-chart-bar"></i>
+                Reportes
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="reports-header">
+            <div class="header-info">
+                <h1>Reportes y Estadísticas</h1>
+                <p>Análisis detallado de la asistencia escolar</p>
+            </div>
+            <div class="header-actions">
+                <select id="periodFilter" onchange="updateReports()">
+                    <option value="today">Hoy</option>
+                    <option value="week">Esta Semana</option>
+                    <option value="month">Este Mes</option>
+                    <option value="year">Este Año</option>
+                </select>
+                <button class="btn btn-primary" onclick="exportReport()">
+                    <i class="fas fa-download"></i>
+                    Exportar Reporte
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 id="totalStudentsStat">0</h3>
+                    <p>Total Estudiantes</p>
+                    <span class="stat-change positive">+5% vs mes anterior</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 id="presentTodayStat">0</h3>
+                    <p>Presentes Hoy</p>
+                    <span class="stat-change positive">+12% vs ayer</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-percentage"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 id="attendanceRateStat">0%</h3>
+                    <p>Tasa de Asistencia</p>
+                    <span class="stat-change positive">+3% vs semana anterior</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 id="absentTodayStat">0</h3>
+                    <p>Ausentes Hoy</p>
+                    <span class="stat-change negative">-8% vs ayer</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-section">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>Asistencia por Día</h3>
+                    <div class="chart-controls">
+                        <button class="chart-btn active" onclick="changeChartPeriod('week')">Semana</button>
+                        <button class="chart-btn" onclick="changeChartPeriod('month')">Mes</button>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="attendanceChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>Asistencia por Grado</h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="gradeChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Reports -->
+        <div class="reports-section">
+            <div class="report-card">
+                <div class="report-header">
+                    <h3>Estudiantes con Mayor Asistencia</h3>
+                    <span class="report-period">Este mes</span>
+                </div>
+                <div class="report-list">
+                    <div class="report-item">
+                        <div class="student-info">
+                            <img src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop" alt="Estudiante">
+                            <div>
+                                <h4>María López</h4>
+                                <span>9-2</span>
+                            </div>
+                        </div>
+                        <div class="attendance-rate">98%</div>
+                    </div>
+                    <div class="report-item">
+                        <div class="student-info">
+                            <img src="https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop" alt="Estudiante">
+                            <div>
+                                <h4>Juan Pérez</h4>
+                                <span>10-1</span>
+                            </div>
+                        </div>
+                        <div class="attendance-rate">95%</div>
+                    </div>
+                    <div class="report-item">
+                        <div class="student-info">
+                            <img src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop" alt="Estudiante">
+                            <div>
+                                <h4>Ana Torres</h4>
+                                <span>11-1</span>
+                            </div>
+                        </div>
+                        <div class="attendance-rate">92%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="report-card">
+                <div class="report-header">
+                    <h3>Grados con Mejor Asistencia</h3>
+                    <span class="report-period">Este mes</span>
+                </div>
+                <div class="grade-stats">
+                    <div class="grade-stat">
+                        <div class="grade-info">
+                            <h4>10-1</h4>
+                            <span>25 estudiantes</span>
+                        </div>
+                        <div class="grade-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 94%"></div>
+                            </div>
+                            <span>94%</span>
+                        </div>
+                    </div>
+                    <div class="grade-stat">
+                        <div class="grade-info">
+                            <h4>9-2</h4>
+                            <span>28 estudiantes</span>
+                        </div>
+                        <div class="grade-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 91%"></div>
+                            </div>
+                            <span>91%</span>
+                        </div>
+                    </div>
+                    <div class="grade-stat">
+                        <div class="grade-info">
+                            <h4>11-2</h4>
+                            <span>22 estudiantes</span>
+                        </div>
+                        <div class="grade-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 88%"></div>
+                            </div>
+                            <span>88%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer"></div>
+
+    <script src="reports.js"></script>
+</body>
+</html>

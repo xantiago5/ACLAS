@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Asistencia - EduControl</title>
+    <link rel="stylesheet" href="asistencia.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <i class="fas fa-graduation-cap"></i>
+            <span>EduControl</span>
+        </div>
+        <div class="navbar-nav">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-home"></i>
+                Inicio
+            </a>
+            <a href="asistencia.html" class="nav-link active">
+                <i class="fas fa-clipboard-check"></i>
+                Asistencia
+            </a>
+            <a href="students.html" class="nav-link">
+                <i class="fas fa-users"></i>
+                Estudiantes
+            </a>
+            <a href="reports.html" class="nav-link">
+                <i class="fas fa-chart-bar"></i>
+                Reportes
+            </a>
+        </div>
+        <div class="navbar-counter">
+            <div class="counter">
+                <i class="fas fa-users"></i>
+                <span id="contadorAsistentes">0 Registrados</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="attendance-header">
+            <div class="header-info">
+                <h1>Registro de Asistencia</h1>
+                <p>Fecha: <span id="currentDate"></span></p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="exportAttendance()">
+                    <i class="fas fa-download"></i>
+                    Exportar
+                </button>
+                <button class="btn btn-success save-btn" onclick="guardarCambios()">
+                    <i class="fas fa-save"></i>
+                    Guardar Cambios
+                </button>
+            </div>
+        </div>
+
+        <!-- Search Section -->
+        <div class="search-section">
+            <div class="search-container">
+                <div class="search-input-group">
+                    <div class="input-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <input 
+                        type="text" 
+                        id="codigoInput" 
+                        placeholder="Ingresa el código del estudiante..."
+                        autocomplete="off"
+                    >
+                    <button class="btn btn-primary" onclick="registrarAsistencia()">
+                        <i class="fas fa-plus"></i>
+                        Registrar
+                    </button>
+                </div>
+                <div class="student-preview">
+                    <div class="student-photo">
+                        <img id="fotoEstudiante" src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=100&h=130&fit=crop" alt="Foto del estudiante">
+                    </div>
+                    <div class="student-info">
+                        <h3 id="studentName">Estudiante</h3>
+                        <p id="studentGrade">Grado</p>
+                        <span id="studentCode">Código</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attendance Table -->
+        <div class="table-section">
+            <div class="table-header">
+                <h2>Estudiantes Registrados Hoy</h2>
+                <div class="table-filters">
+                    <select id="gradeFilter" onchange="filterByGrade(this.value)">
+                        <option value="">Todos los grados</option>
+                        <option value="7-1">7-1</option>
+                        <option value="7-2">7-2</option>
+                        <option value="8-1">8-1</option>
+                        <option value="8-2">8-2</option>
+                        <option value="9-1">9-1</option>
+                        <option value="9-2">9-2</option>
+                        <option value="10-1">10-1</option>
+                        <option value="10-2">10-2</option>
+                        <option value="11-1">11-1</option>
+                        <option value="11-2">11-2</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <h3>No hay registros de asistencia</h3>
+                <p>Los estudiantes que registren su asistencia aparecerán aquí</p>
+            </div>
+
+            <!-- Table -->
+            <div class="table-container">
+                <table id="tablaAsistencia" class="attendance-table">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Grado</th>
+                            <th>Hora de Registro</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoTabla">
+                        <!-- Rows will be added dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer"></div>
+
+    <script src="asistencia.js"></script>
+</body>
+</html>

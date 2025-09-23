@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Estudiantes - EduControl</title>
+    <link rel="stylesheet" href="students.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <i class="fas fa-graduation-cap"></i>
+            <span>EduControl</span>
+        </div>
+        <div class="navbar-nav">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-home"></i>
+                Inicio
+            </a>
+            <a href="asistencia.html" class="nav-link">
+                <i class="fas fa-clipboard-check"></i>
+                Asistencia
+            </a>
+            <a href="students.html" class="nav-link active">
+                <i class="fas fa-users"></i>
+                Estudiantes
+            </a>
+            <a href="reports.html" class="nav-link">
+                <i class="fas fa-chart-bar"></i>
+                Reportes
+            </a>
+        </div>
+        <div class="navbar-counter">
+            <div class="counter">
+                <i class="fas fa-users"></i>
+                <span id="totalStudentsCount">0 Estudiantes</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="students-header">
+            <div class="header-info">
+                <h1>Gestión de Estudiantes</h1>
+                <p>Administra la información de todos los estudiantes registrados</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="exportStudents()">
+                    <i class="fas fa-download"></i>
+                    Exportar
+                </button>
+                <a href="register.html" class="btn btn-primary">
+                    <i class="fas fa-plus"></i>
+                    Nuevo Estudiante
+                </a>
+            </div>
+        </div>
+
+        <!-- Filters Section -->
+        <div class="filters-section">
+            <div class="search-bar">
+                <div class="input-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Buscar por nombre o código..."
+                    oninput="filterStudents(this.value)"
+                >
+            </div>
+            <div class="filter-controls">
+                <select id="gradeFilter" onchange="filterByGrade(this.value)">
+                    <option value="">Todos los grados</option>
+                    <option value="7-1">7-1</option>
+                    <option value="7-2">7-2</option>
+                    <option value="8-1">8-1</option>
+                    <option value="8-2">8-2</option>
+                    <option value="9-1">9-1</option>
+                    <option value="9-2">9-2</option>
+                    <option value="10-1">10-1</option>
+                    <option value="10-2">10-2</option>
+                    <option value="11-1">11-1</option>
+                    <option value="11-2">11-2</option>
+                </select>
+                <select id="genderFilter" onchange="filterByGender(this.value)">
+                    <option value="">Todos los géneros</option>
+                    <option value="M">Masculino</option>
+                    <option value="F">Femenino</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Students Grid -->
+        <div class="students-section">
+            <div class="section-header">
+                <h2>Lista de Estudiantes</h2>
+                <span id="studentsCount" class="count-badge">0 estudiantes</span>
+            </div>
+            
+            <div id="studentsGrid" class="students-grid">
+                <!-- Student cards will be added dynamically -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <div class="empty-icon">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <h3>No hay estudiantes registrados</h3>
+                <p>Comienza agregando estudiantes al sistema</p>
+                <a href="register.html" class="btn btn-primary">
+                    <i class="fas fa-plus"></i>
+                    Registrar Primer Estudiante
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Modal -->
+    <div id="studentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Información del Estudiante</h3>
+                <button class="modal-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="student-details">
+                    <div class="student-photo-large">
+                        <img id="modalPhoto" src="" alt="Foto del estudiante">
+                    </div>
+                    <div class="student-info-detailed">
+                        <h2 id="modalName"></h2>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <label>Código:</label>
+                                <span id="modalCode"></span>
+                            </div>
+                            <div class="info-item">
+                                <label>Grado:</label>
+                                <span id="modalGrade"></span>
+                            </div>
+                            <div class="info-item">
+                                <label>Género:</label>
+                                <span id="modalGender"></span>
+                            </div>
+                            <div class="info-item">
+                                <label>Fecha de Registro:</label>
+                                <span id="modalDate"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cerrar</button>
+                <button class="btn btn-primary" onclick="editStudent()">
+                    <i class="fas fa-edit"></i>
+                    Editar
+                </button>
+                <button class="btn btn-danger" onclick="deleteStudent()">
+                    <i class="fas fa-trash"></i>
+                    Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer"></div>
+
+    <script src="students.js"></script>
+</body>
+</html>
